@@ -3,78 +3,100 @@
 <p align="center">
   <img alt="Supabase Active" src="https://img.shields.io/badge/Supabase-Active-green" />
   <img alt="GitHub Actions" src="https://img.shields.io/badge/GitHub-Actions-blue" />
+  <img alt="Automation" src="https://img.shields.io/badge/Automation-Enabled-success" />
 </p>
 
 <p align="center">
   <img src="./preview.png" alt="Preview" />
 </p>
 
-פתרון אוטומטי למניעת השהייה (Pause) של פרויקטים חינמיים ב-Supabase עקב חוסר פעילות, על ידי יצירת פעילות יזומה ואוטומטית במסד הנתונים באמצעות GitHub Actions.
+פתרון אוטומטי למניעת השהייה (Pause) של פרויקטים חינמיים ב-Supabase עקב חוסר פעילות, באמצעות GitHub Actions שמבצע פעילות Database אמיתית באופן אוטומטי.
 
 ---
 
 # 🎯 הבעיה
 
-- **מדיניות המסלול החינמי:**  
-  ב-Supabase, פרויקט שלא נרשמת בו פעילות מסד נתונים במשך 7 ימים ברצף – מושהה אוטומטית.
+במסלול החינמי של Supabase, פרויקט שלא מתבצעת בו פעילות Database במשך 7 ימים רצופים — מושעה אוטומטית.
 
-- **האתגר בפרויקטים אישיים:**  
-  פרויקטים קטנים (כמו כלי עזר או אפליקציות לשימוש אישי כגון חישובי הוצאות חשמל ומים שבודקים פעם בחודש) סובלים מכך במיוחד.
+זה קורה הרבה בפרויקטים כמו:
 
-- **האתגר הטכני:**  
-  Ping רגיל לשרת לא מספיק.  
-  Supabase דורש שאילתת Database אמיתית כדי לאפס את הטיימר.
+- מחשבון חשמל / מים
+- דשבורד אישי
+- מערכת פנימית
+- אפליקציות לשימוש עצמי
+- פרויקטי Side Project
+
+במיוחד כשנכנסים אליהם רק פעם בכמה שבועות.
 
 ---
 
 # 💡 הפתרון
 
-הקמת אוטומציה ב-GitHub שרצה פעמיים ביום, ניגשת ל-API של הפרויקט, ומבצעת שאילתת Select קטנה ואמיתית לטבלה במסד הנתונים.
+האוטומציה הזו משתמשת ב־GitHub Actions כדי לבצע Query אמיתי למסד הנתונים כל יומיים.
 
-## הסקריפט כולל מנגנוני הגנה מתקדמים
-
-- ✅ פעילות Database אמיתית
-- ✅ הגנה מקריסות רשת רגעיות
-- ✅ מניעת כיבוי של GitHub Actions
-- ✅ הרצה אוטומטית פעמיים ביום
-- ✅ אפשרות להרצה ידנית
+כך:
+- Supabase מזהה פעילות אמיתית
+- הטיימר של 7 הימים מתאפס
+- והפרויקט נשאר פעיל תמיד
 
 ---
 
-# ⚙️ הוראות התקנה והגדרה
+# ✅ מה הסקריפט כולל
 
-## שלב 1: השגת פרטי ההתחברות מ-Supabase
+- ✅ Query אמיתי ל־Database
+- ✅ ריצה אוטומטית כל יומיים
+- ✅ תמיכה בהרצה ידנית
+- ✅ הגנה מקריסות רשת רגעיות
+- ✅ שמירה על GitHub Actions פעיל
+- ✅ שימוש מאובטח ב־GitHub Secrets
 
-1. היכנסו ל-Supabase
+---
+
+# ⚙️ הוראות התקנה
+
+---
+
+# שלב 1: השגת פרטי Supabase
+
+1. היכנסו ל־Supabase
 2. בחרו את הפרויקט שלכם
 3. בתפריט הצד:
-   - **Settings**
-   - **API**
+
+```txt
+Settings → API
+```
 
 העתיקו:
 
-- `Project ID`
-- `anon public key`
+- Project ID
+- anon public key
 
 ---
 
-## שלב 2: הגדרת Secrets ב-GitHub
+# שלב 2: הגדרת Secrets ב־GitHub
 
-1. Repository → **Settings**
-2. **Secrets and variables**
-3. **Actions**
-4. **New repository secret**
+היכנסו ל־Repository שלכם:
 
-הוסיפו:
+```txt
+Settings → Secrets and variables → Actions
+```
 
-### Secret ראשון
+לחצו:
+
+```txt
+New repository secret
+```
+
+והוסיפו:
+
+## Secret ראשון
 
 ```txt
 Name: SUPABASE_PROJECT_ID
 Value: YOUR_PROJECT_ID
 ```
 
-### Secret שני
+## Secret שני
 
 ```txt
 Name: SUPABASE_ANON_KEY
@@ -83,25 +105,39 @@ Value: YOUR_SUPABASE_ANON_KEY
 
 ---
 
-# שלב 3: הוספת האוטומציה
+# שלב 3: יצירת קובץ האוטומציה
 
-> ⚠️ חשוב: לפני הרצת הסקריפט, החליפו את `your_table_name` בשם של טבלה אמיתית וציבורית בפרויקט שלכם.
-
-צרו קובץ:
+צרו קובץ חדש בנתיב:
 
 ```txt
 .github/workflows/keep-supabase-alive.yml
 ```
 
-והדביקו:
+---
+
+# ⚠️ חשוב לפני ההדבקה
+
+לפני שמריצים את הסקריפט:
+
+החליפו את:
+
+```txt
+your_table_name
+```
+
+בשם של טבלה אמיתית וציבורית שקיימת בפרויקט שלכם.
+
+---
+
+# 📄 הקוד המלא
 
 ```yaml
 name: Keep Supabase Alive
 
 on:
   schedule:
-    # Runs twice a day at 08:00 and 20:00 UTC
-    - cron: '0 8,20 * * *'
+    # Runs every 2 days at 08:00 UTC
+    - cron: '0 8 */2 * *'
 
   # Allows manual execution
   workflow_dispatch:
@@ -128,8 +164,8 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
         run: |
-          # Real DB query against a public table
-          # 👇 Replace with a real table name
+          # Real database activity
+          # Replace 'your_table_name' with a real public table
           URL="https://${SUPABASE_PROJECT_ID}.supabase.co/rest/v1/your_table_name?select=id&limit=1"
 
           echo "Querying Supabase DB: $SUPABASE_PROJECT_ID..."
@@ -154,7 +190,7 @@ jobs:
 
       - name: Keep workflow alive
         run: |
-          # Check if last commit is older than 30 days
+          # Prevent GitHub Actions auto-disable on inactive repos
           LAST_COMMIT=$(git log -1 --format=%ct)
           NOW=$(date +%s)
           DAYS_AGO=$(( (NOW - LAST_COMMIT) / 86400 ))
@@ -174,35 +210,29 @@ jobs:
 
 ---
 
-# 🛠️ דגשים לעבודה השוטפת
+# 🛠️ איך לבדוק שזה עובד
 
-## שגר ושכח
-
-מרגע הכנסת הקובץ ל-GitHub, האוטומציה תרוץ לבד ברקע.
-
----
-
-## בדיקה ידנית
-
-ניתן להיכנס לטאב:
+היכנסו לטאב:
 
 ```txt
 Actions
 ```
 
-ולהריץ ידנית את:
+בחרו:
 
 ```txt
 Keep Supabase Alive
 ```
 
-כדי לוודא שהכול עובד.
+ולחצו:
 
----
+```txt
+Run workflow
+```
 
-## הרשאות RLS
-
-ודאו שהטבלה שבחרתם מאפשרת פעולת Select.
+אם הכול תקין:
+- תקבלו HTTP 200
+- ו־Supabase ירשום פעילות
 
 ---
 
@@ -231,19 +261,18 @@ your_table_name
 
 ---
 
-## Workflow לא רץ
+## אין פעילות ב־Supabase
 
-ייתכן שצריך לאשר GitHub Actions בפעם הראשונה דרך טאב:
-
-```txt
-Actions
-```
+ודאו:
+- שהטבלה קיימת
+- שהיא ציבורית
+- וש־RLS מאפשר SELECT
 
 ---
 
 # 🔐 אבטחה
 
-לעולם אל תכניסו את מפתחות Supabase ישירות לקוד או ל־README.
+לעולם אל תכניסו מפתחות Supabase ישירות לקוד.
 
 השתמשו תמיד ב־GitHub Secrets.
 
@@ -251,4 +280,4 @@ Actions
 
 # ✅ סיימתם
 
-מעכשיו הפרויקט שלכם ב-Supabase יישאר פעיל וזמין אוטומטית 🚀
+מעכשיו הפרויקט שלכם ב־Supabase יישאר פעיל אוטומטית 🚀
